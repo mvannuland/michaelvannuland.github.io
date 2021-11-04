@@ -12,3 +12,5 @@ description: >
 theme: jekyll-theme-minimal
 github: is\_project\_page:false
 google_analytics: UA-52639824-1 # MVN Google Analytics tracking ID
+
+text-col: "#406011"
