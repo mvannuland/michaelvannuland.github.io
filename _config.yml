@@ -8,6 +8,5 @@ description: > # your text below (remove <br> elements if you don't need line br
   <a href="https://www.michaelvannuland.com/">View My Research Profile</a> 
   
 theme: jekyll-theme-minimal
-github:
-is\_project\_page:false
+github: is\_project\_page:false
 google_analytics: UA-52639824-1 # your Google Analytics tracking ID here
