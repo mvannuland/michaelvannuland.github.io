@@ -1,12 +1,13 @@
 title: Michael<br>Van Nuland
 logo: "/images/MVN.profilepics.002.jpeg?raw=true" # your photo (or logo) here
-<br><br>
 description: > # your text below (remove <br> elements if you don't need line breaks)
   PhD in Ecology and Evolutionary Biology
   <br><br>
   Plant and soil ecology<br>Microbial bioinformatics<br>Global change biology
   <br><br>
-  <a href="https://www.michaelvannuland.com/">View My Research Profile</a> 
+  <a href="https://www.michaelvannuland.com/">Research Profile</a>
+  <br><br>
+  <a href="https://scholar.google.com/citations?user=jEJmpCgAAAAJ&hl=en">Google Scholar</a>
   
 theme: jekyll-theme-minimal
 github: is\_project\_page:false
