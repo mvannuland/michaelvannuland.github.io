@@ -2,8 +2,8 @@
 ---
 
 // Text
-$section-headings-color: #0000ff;
-$body-text-color: #606c71 !default;
+$section-headings-color: #ff00ff;
+$body-text-color: #ff00ff !default;
 $body-link-color: #1e6bb8 !default;
 
 @import "jekyll-theme-minimal";
