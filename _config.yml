@@ -1,13 +1,17 @@
 title: <center>Michael<br>Van Nuland</center>
+
 logo: "/images/MVN.profilepics.002.jpeg?raw=true"
-description: >
+
+description: 
+ <p align="center">
+  # <a href="pdf/resume.pdf">Resume</a> |
+  <a href="https://www.michaelvannuland.com/">Research Profile</a> |
+  <a href="https://scholar.google.com/citations?user=jEJmpCgAAAAJ&hl=en">Google Scholar</a>
+
   PhD in Ecology and Evolutionary Biology
   <br><br>
   Plant and soil ecology<br>Microbial bioinformatics<br>Global change biology
-  <br><br>
-  <a href="https://www.michaelvannuland.com/">Research Profile</a>
-  <br>
-  <a href="https://scholar.google.com/citations?user=jEJmpCgAAAAJ&hl=en">Google Scholar</a>
+  </p>
   
 theme: jekyll-theme-minimal
 github: is\_project\_page:false
