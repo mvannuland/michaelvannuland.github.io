@@ -10,4 +10,6 @@
 
 [4] Plant-fungal mismatch analysis and maps... (export a portion of the data and sdm maps to show example)
 
-# Also need to include links to data sci resume, and clarify experience levels with R (10 years), statistics (13 years), python, etc...
+---
+
+Also need to include links to data sci resume, and clarify experience levels with R (10 years), statistics (13 years), python, etc...
