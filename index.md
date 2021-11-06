@@ -5,7 +5,7 @@
 ### Projects 
 
 [Project 1 Title](/sample_page)
-<img src="images/Pinus.myc.jpg?raw=true"/>
+<img src="images/Pinus_myc.jpg?raw=true"/>
 
 ---
 [Project 2 Title](/pdf/sample_presentation.pdf)
