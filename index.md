@@ -2,7 +2,7 @@
 
 ---
 
-### Projects 
+### Projects
 
 [Project 1 Title](/sample_page)
 <img src="images/Pinus_myc.jpeg?raw=true"/>
