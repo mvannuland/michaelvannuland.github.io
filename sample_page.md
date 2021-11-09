@@ -168,7 +168,6 @@ combineWidgets(Control.surface, Fungi1.surface, Fungi2.surface, Mixed.surface, n
 
 
 
-
 ### 4. Provide a basis for further data collection through surveys or experiments
 
 Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. 
