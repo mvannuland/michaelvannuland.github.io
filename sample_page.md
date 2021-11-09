@@ -88,11 +88,83 @@ ggplot(aes(x=log(Phosphorus), y=N.resids), data = pinus.myc.dat) +
   ylim(-1.5, 1.2) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 ```
+<p align="center"><img src="images/growthplots.jpeg?" alt="drawing" width="700"/></p>
 
 
+### 3. 3-D response surface plots
+Visualizing plant growth simultaneously across the two-dimensional axes of critical soil resources (nitrogen and phosphorus).
 
+```javascript
+# Create & smooth 7x7 matrices of total biomass responses across N and P gradients
+Control.mat <- acast(Control, Nitrogen~Phosphorus, value.var = "TotalBiomass", mean, drop=TRUE)
+Fungi1.mat <- acast(Fungi1, Nitrogen~Phosphorus, value.var = "TotalBiomass", mean, drop=TRUE)
+Fungi2.mat <- acast(Fungi2, Nitrogen~Phosphorus, value.var = "TotalBiomass", mean, drop=TRUE)
+Mixed.mat <- acast(Mixed, Nitrogen~Phosphorus, value.var = "TotalBiomass", mean, drop=TRUE)
 
-### 3. Support the selection of appropriate statistical tools and techniques
+# Smooths over missing matrix values
+Control.mat.smooth <- image.smooth(Control.mat, theta=1)
+Fungi1.mat.smooth <- image.smooth(Fungi1.mat, theta=1)
+Fungi2.mat.smooth <- image.smooth(Fungi2.mat, theta=1)
+Mixed.mat.smooth <- image.smooth(Mixed.mat, theta=1)
+
+# Set same Z-axes limits across plots for easier comparison
+axz <- list(range = c(180, 1180), title=list(text="Plant biomass")) 
+
+# Control
+Control.surface <-
+  plot_ly( z = ~Control.mat.smooth$z) %>% 
+  add_surface(opacity = 0.95) %>% 
+  hide_colorbar() %>%
+  layout(
+  title=list(text="Control", y = 0.90, font=list(color="black", size=20)),
+  scene=list(
+    aspectmode = 'cube',
+    xaxis=list(title="Phosphorus", autorange = "reversed"),
+    yaxis=list(title="Nitrogen", autorange = "reversed"), 
+    zaxis=axz))
+
+# Fungi1
+Fungi1.surface <- 
+  plot_ly( z = ~Fungi1.mat.smooth$z) %>% 
+  add_surface(opacity = 0.95) %>% 
+  hide_colorbar() %>%
+  layout(
+  title=list(text="Fungi 1", y = 0.90, font=list(color="black", size=20)),
+  scene=list(
+    aspectmode = 'cube',
+    xaxis=list(title="Phosphorus", autorange = "reversed"),
+    yaxis=list(title="Nitrogen", autorange = "reversed"), 
+    zaxis=axz))
+
+# Fungi2
+Fungi2.surface <- 
+  plot_ly( z = ~Fungi2.mat.smooth$z) %>% 
+  add_surface(opacity = 0.95) %>% 
+  hide_colorbar() %>%
+  layout(
+  title=list(text="Fungi 2", y = 0.90, font=list(color="black", size=20)),
+  scene=list(
+    aspectmode = 'cube',
+    xaxis=list(title="Phosphorus", autorange = "reversed"),
+    yaxis=list(title="Nitrogen", autorange = "reversed"), 
+    zaxis=axz))
+
+# Mixed (F1 + F2)
+Mixed.surface <-
+  plot_ly( z = ~Mixed.mat.smooth$z) %>% 
+  add_surface(opacity = 0.95) %>% 
+  hide_colorbar() %>%
+  layout(
+  title=list(text="Mixed (F1 + F2)", y = 0.90, font=list(color="black", size=20)),
+  scene=list(
+    aspectmode = 'cube',
+    xaxis=list(title="Phosphorus", autorange = "reversed"),
+    yaxis=list(title="Nitrogen", autorange = "reversed"), 
+    zaxis=axz))
+
+combineWidgets(Control.surface, Fungi1.surface, Fungi2.surface, Mixed.surface, ncol = 2, nrow=2)
+```
+
 
 <img src="images/dummy_thumbnail.jpg?raw=true"/>
 
