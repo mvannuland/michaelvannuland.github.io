@@ -164,9 +164,7 @@ Mixed.surface <-
 
 combineWidgets(Control.surface, Fungi1.surface, Fungi2.surface, Mixed.surface, ncol = 2, nrow=2)
 ```
-<img src="images/PlantResponseSurfaces.html?raw=true"/>
-
-
+{% include PlantResponseSurfaces.html %}
 
 
 
