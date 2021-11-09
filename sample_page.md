@@ -164,9 +164,12 @@ Mixed.surface <-
 
 combineWidgets(Control.surface, Fungi1.surface, Fungi2.surface, Mixed.surface, ncol = 2, nrow=2)
 ```
+<img src="images/PlantResponseSurfaces.html?raw=true"/>
 
 
-<img src="images/dummy_thumbnail.jpg?raw=true"/>
+
+
+
 
 ### 4. Provide a basis for further data collection through surveys or experiments
 
