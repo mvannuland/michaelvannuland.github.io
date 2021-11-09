@@ -1,24 +1,96 @@
-## This can be your internal website page / project page
+## Project 1: Quantifying the benefits of fungal symbiont partners to plant hosts
 
-**Project description:** Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+**Project description:** This project shows an example of customized scripts for linear mixed effects modeling, matrix bootstrapping, and convex hull analysis of response surface volumes in R.
 
-### 1. Suggest hypotheses about the causes of observed phenomena
+Data are from Van Nuland et al. (2020) "Symbiotic niche mapping reveals functional specialization by two ectomycorrhizal fungi that expands the host plant niche" in <em>Fungal Ecology</em>. Briefly, this experiment tested how different species of symbiotic fungi (mycorrhizal fungi) influence plant responses to soil nutrient limitation. I hypothesized that the fungi would provide greater benefits to the plants under increasing nutrient stress, but that the extent of these positive growth effects would differ depending on the specific fungal species and type of nutrient stress (e.g., nitrogen vs. phosphorus limitation). 
 
-Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. 
+See the full project on Github here: https://github.com/mvannuland/pinus_myc_project,  
+and more thorough descriptions and interpretations in the paper here: https://doi.org/10.1016/j.funeco.2020.100960.
 
-```javascript
-if (isAwesome){
-  return true
-}
-```
-
-### 2. Assess assumptions on which statistical inference will be based
+### 1. Getting started
+Load the relevant R libraries and project dataset.
 
 ```javascript
-if (isAwesome){
-  return true
-}
+# Libraries for data wrangling and analysis 
+library(lme4)
+library(lmerTest)
+library(geometry)
+library(fields)
+library(reshape2)
+
+# Libraries for plotting
+library(ggplot2)
+library(ggpubr)
+library(manipulateWidget)
+library(plotly)
+library(viridis)
+library(webshot)
+theme_set(theme_bw())
+
+# Load dataset
+pinus.myc.dat <- readRDS(file="pinus.myc.rds")
+
+# Subset data by fungal treatments (for response surface analysis later)
+Control <- subset(pinus.myc.dat, pinus.myc.dat$MYC=="Control")
+Fungi1 <- subset(pinus.myc.dat, pinus.myc.dat$MYC=="Fungi1")
+Fungi2 <- subset(pinus.myc.dat, pinus.myc.dat$MYC=="Fungi2")
+Mixed <- subset(pinus.myc.dat, pinus.myc.dat$MYC=="Mixed (F1+F2)")
 ```
+
+### 2.1 Hypothesis testing with linear mixed effects model
+This model tests whether the mycorrhizal fungi treatments (MYC), nutrient fertilization treatments (Nitrogen, Phosphorus), and/or their interactions affect total plant biomass. The experiment was created with randomized blocks (REP) which are included as random effects to account for any potential variation in the room where plants were growing that might have unintentionally altered their growth.
+
+```javascript
+TotalBiomass.mod <- lmer(log(TotalBiomass) ~ MYC * log(Nitrogen) * log(Phosphorus) + (1|REP), data = na.exclude(pinus.myc.dat))
+
+anova(TotalBiomass.mod)
+```
+| Factor      | F value    | p value    |
+| :---        |   :----:   |       ---: |
+| MYC         | 0.8        | 0.5        |
+| Nitrogen    | 448.5      | <0.001 *** |
+| Phosphorus  | 0.2        | 0.7        |
+| MYC x N     | 1.7        | 0.2        |
+| MYC x P     | 2.9        | 0.04   *   |
+| N x P       | 65.4       | <0.001 *** |
+| MYC x N x P | 0.9        | 0.5        |
+
+One big take-away from these results is in the MYC x P interaction term, which shows that plant growth responses to phosphorus fertilization depend on the mycorrhizal treatments (evidence that supports one of the main hypotheses in this project).
+
+
+### 2.2 Partial regression plots
+We can explore these patterns further with partial regressions, which is one way to isolate single variable effects while accounting for the variation attributed to other variables using residuals.
+
+```javascript
+# Calculate residuals for Nitrogen and Phosphorus effects (isolate variation explained by Nitrogen vs. Phosphorus nutrient treatments)
+TotalBiomass.mod.N.resids <- lm(log(TotalBiomass) ~ log(Nitrogen), data = pinus.myc.dat)
+TotalBiomass.mod.P.resids <- lm(log(TotalBiomass) ~ log(Phosphorus), data = pinus.myc.dat)
+N.resids <- resid(TotalBiomass.mod.N.resids)  
+P.resids <- resid(TotalBiomass.mod.P.resids)
+pinus.myc.dat <- cbind.data.frame(pinus.myc.dat, N.resids, P.resids)
+
+# Plot partial regressions using residuals
+ggplot(aes(x=log(Nitrogen), y=P.resids), data = pinus.myc.dat) +
+  geom_point(position = position_jitterdodge(dodge.width = 0.3, jitter.width = 0.1), size = 1.5, aes(color = MYC), show.legend = T) +
+  geom_smooth(method = "loess", se=F, lwd=1, show.legend = F, aes(color = MYC), formula = 'y~x') +
+  scale_colour_viridis_d("Fungal treatment", direction = -1) +
+  xlab("Log Nitrogen (mg/kg soil)") +
+  ylab("Total Plant Biomass (residuals)") +
+  ylim(-1.5, 1.2) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+ggplot(aes(x=log(Phosphorus), y=N.resids), data = pinus.myc.dat) +
+  geom_point(position = position_jitterdodge(dodge.width = 0.3, jitter.width = 0.1), size = 1.5, aes(color = MYC), show.legend = T) +
+  geom_smooth(method = "loess", se=F, lwd=1, show.legend = F, aes(color = MYC), formula = 'y~x') +
+  scale_colour_viridis_d("Fungal treatment", direction = -1) +
+  xlab("Log Phosphorus (mg/kg soil)") +
+  ylab("Total Plant Biomass (residuals)") +
+  ylim(-1.5, 1.2) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+```
+
+
+
 
 ### 3. Support the selection of appropriate statistical tools and techniques
 
