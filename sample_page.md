@@ -164,7 +164,7 @@ Mixed.surface <-
 
 combineWidgets(Control.surface, Fungi1.surface, Fungi2.surface, Mixed.surface, ncol = 2, nrow=2)
 ```
-{% include_relative PlantResponseSurfaces.html}
+<iframe src="##" width="100%" height="400" id="igraph" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
 
 
 ### 4. Provide a basis for further data collection through surveys or experiments
