@@ -164,7 +164,7 @@ Mixed.surface <-
 
 combineWidgets(Control.surface, Fungi1.surface, Fungi2.surface, Mixed.surface, ncol = 2, nrow=2)
 ```
-{% include_relative PlantResponseSurfaces.html}
+<iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://mvannuland.github.io/Pinus_myc_plotly_surfaces/" width="500%"></iframe>
 
 
 
