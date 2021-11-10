@@ -4,7 +4,7 @@
 
 ### Projects
 
-[Mixed effects models, regression, bootstrapping, & Plot.ly 3D-surface plots](/sample_page)
+[Mixed effects models, regression, bootstrapping, & Plot.ly 3D-surface plots](/_htmls/pinus.myc.code.html)
 <img src="images/Pinus_myc.jpeg?raw=true"/>
 
 ---
