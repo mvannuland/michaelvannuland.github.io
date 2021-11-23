@@ -121,12 +121,12 @@ Climate.pca <- PCA(plant.climate.full[1:48,])
 # Here we can look at which climate variables have the largest influence on the first and second PCA axis
 # The red dashed line indicates the expected average percent variance explained. This means that climate variables explaining more variation can be interpreted as having a larger contribution to the princple component dimension).
 fviz_contrib(Climate.pca, choice = "var", axes = 1, top = 19, fill="black", color="black") +
-  labs(x="Climate variable", y="Contributions to PCA1 (%)", title="") +
+  labs(x="Climate variable", y="Contributions\nto PCA1 (%)", title="") +
   theme_bw() +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text.x = element_text(angle=60, hjust=0.975))
 
 fviz_contrib(Climate.pca, choice = "var", axes = 2, top = 19, fill="black", color="black") +
-  labs(x="Climate variable", y="Contributions to PCA1 (%)", title="") +
+  labs(x="Climate variable", y="Contributions\nto PCA2 (%)", title="") +
   theme_bw() +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text.x = element_text(angle=60, hjust=0.975))
 
@@ -167,18 +167,18 @@ names(PCA1.quantregs) <- names(PCA1.qr.summary) <- names(plant.climate.pca.ls)
 # Combine dataframes in list into single dataframe
 plant.climate.pca.dat <- do.call("rbind", plant.climate.pca.ls)
 
-ggplot(plant.climate.pca.dat, aes(x = Trait_value, y = PCA1)) +
+ggplot(plant.climate.pca.dat, aes(x = Trait_value, y = PCA2)) +
   geom_point(size=1, na.rm=TRUE) +
   stat_quantile(geom="quantile", position="identity", quantiles=c(0.95), method="rq", color="red", size=0.7, formula = y ~ x) +
   stat_quantile(geom="quantile", position="identity", quantiles=c(0.5), method="rq", color="grey45", size=0.7,formula = y ~ x) +
   stat_quantile(geom="quantile", position="identity", quantiles=c(0.05), method="rq", color="blue", size=0.7, formula = y ~ x) +
   facet_wrap(~Trait_id, scales = "free_x") +
-  labs(x="Trait value", y="Climate PCA1") +
+  labs(x="Trait value", y="Climate PCA2") +
   theme_bw() +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
   theme(legend.position="none")
 ```
-<p align="center"><img src="images/?" alt="drawing" width="900"/></p>
+<p align="center"><img src="images/PCA_QuantReg.png?" alt="drawing" width="900"/></p>
 
 
 ### 4. Mapping climate constraints on plant trait variation
