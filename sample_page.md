@@ -1,11 +1,13 @@
-## Project 1: Quantifying the benefits of fungal symbiont partners to plant hosts
+## Project 1: Quantifying and mapping plant trait limits at climate extremes
 
-**Project description:** This project shows an example of customized scripts for linear mixed effects modeling, matrix bootstrapping, and convex hull analysis of response surface volumes in R.
+**Project description:** This project shows how to combine quantile regressions with plant trait data and climate variables to better understand species geographic ranges. Data are from Van Nuland et al. (2020) "Intraspecific trait variation across elevation predicts a widespread tree species' climate niche and range limits" in <em>Ecology and Evolution</em>. 
 
-Data are from Van Nuland et al. (2020) "Symbiotic niche mapping reveals functional specialization by two ectomycorrhizal fungi that expands the host plant niche" in <em>Fungal Ecology</em>. Briefly, this experiment tested how different species of symbiotic fungi (mycorrhizal fungi) influence plant responses to soil nutrient limitation. I hypothesized that the fungi would provide greater benefits to the plants under increasing nutrient stress, but that the extent of these positive growth effects would differ depending on the specific fungal species and type of nutrient stress (e.g., nitrogen vs. phosphorus limitation). 
+Briefly, this study leveraged the variation across thousands of plant trait measuresments (e.g., leaf area, tree diameter) to predict where climates may be too difficult for a tree species to grow and thrive. The ecological idea behind this project is relatively straightforward: if climate stress leaves a consistent signature on plant trait variation, then trait distributions should be informative for predicting the temperature and precipitation extremes that define species range limits. Here, using quantile regression is helpful because we might expect that a given trait-climate relationship could differ between the upper 95th percentile, median 50th percentile, and lower 5th percentile of the climate gradient. For example, leaf traits might respond differently to temperature at the upper warm edge vs. the lower cold edge of the species climate range, and quantile regressions can be useful for teasing this apart.
 
-See the full project on Github here: https://github.com/mvannuland/pinus_myc_project,  
-and more thorough descriptions and interpretations in the paper here: https://doi.org/10.1016/j.funeco.2020.100960.
+
+See the full project and results from the paper here: https://doi.org/10.1016/j.funeco.2020.100960.
+
+
 
 ### 1. Getting started
 Load the relevant R libraries and project dataset.
