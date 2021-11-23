@@ -2,58 +2,108 @@
  
 **Project description:** This project shows how to combine quantile regressions with plant trait data and climate variables to better understand species geographic ranges. Data are from Van Nuland et al. (2020) "Intraspecific trait variation across elevation predicts a widespread tree species' climate niche and range limits" in <em>Ecology and Evolution</em>.
  
-Briefly, this study leveraged the variation across thousands of plant trait measuresments (e.g., leaf area, tree diameter) to predict where climates may be too difficult for a tree species to grow and thrive. The ecological idea behind this project is relatively straightforward: if climate stress leaves a consistent signature on plant trait variation, then trait distributions should be informative for predicting the temperature and precipitation extremes that define species range limits. Here, using quantile regression is helpful because you might expect that a given trait-climate relationship could differ between the upper 95th percentile, median 50th percentile, and lower 5th percentile of the climate gradient. For example, leaf traits might respond differently to temperature extremes at the upper warm edge vs. the lower cold edge of the species climate range, and quantile regressions can be useful for teasing apart these differences. 
+Briefly, this study leveraged the natural variation across plant trait measuresments (e.g., leaf area, tree diameter) to predict where climates may be too difficult for a tree species to grow and thrive. The ecological idea behind this project is relatively straightforward: if climate stress leaves a consistent signature on plant trait variation, then trait distributions should be informative for predicting the temperature and precipitation extremes that define species range limits. Here, using quantile regression is helpful because you might expect that a given trait-climate relationship could differ between the upper 95th percentile, median 50th percentile, and lower 5th percentile of the climate gradient. For example, leaf traits might respond differently to temperature extremes at the upper warm edge vs. the lower cold edge of the species climate range, and quantile regressions can be useful for teasing apart these differences. 
 
-Below is an overview of the approach I used to sample plant traits across elevation gradients (which act as natural climate gradients) to capture the necessary variation in trait-climate relationships in order to test this idea. See the full project and results from the paper here for more information: https://doi.org/10.1002/ece3.5969.
-<p align="center"><img src="images/TraitClimateOverview.png?" alt="drawing" width="500"/></p>
-
-
+Below is an overview of the approach I used to sample plant traits across elevation gradients (which act as natural climate gradients) to capture the necessary variation in trait-climate relationships in order to test this idea. 
+ 
+See the full project and results from the paper here for more information: https://doi.org/10.1002/ece3.5969.
+<p align="center"><img src="images/TraitClimateOverview.png?" alt="drawing" width="600"/></p>
+ 
+ 
 ### 1. Getting started
-Load the relevant R libraries and project dataset. 
+Load the relevant R libraries, plant data, and climate data. 
 
 ```javascript
+# Load libraries, trait data, and climate data
 
+# Quantile regression
+library(quantreg)
+
+# Spatial analysis and mapping
+library(maptools)
+library(gpclib)
+library(rgdal)
+library(maps)
+library(raster)
+library(sp)
+library(plyr)
+library(plotrix)
+library(ggsn)
+library(rgeos)
+library(ggplot2)
+
+# Load plant trait data 
+plant.dat <- read.csv(file="Plant_traits.csv")
+
+# Load 19 'Bioclim' variables of climate data from worldclim website (https://www.worldclim.org/data/worldclim21.html)
+climate.dat <- getData("worldclim", var="bio", res=2.5) # normally you can download from the server like this, but not working at the moment
+
+# Work-around is to download the geotif layers .zip file and import (using 10min resolution here for speed)
+climate.list <- list.files(path="wc2.1_10m_bio", pattern = '.tif$', all.files=TRUE, full.names=TRUE)
+climate.stack <- lapply(climate.list, raster)
+
+# Extract temperature and precipitation data for the lat/long coordinates and add to plant trait dataset
+plant.temp.dat <- raster::extract(climate.stack[[1]], plant.dat[2:3]) # bio1 is mean annual temperature (degrees C)
+plant.precip.dat <- raster::extract(climate.stack[[4]], plant.dat[2:3]) # bio12 is annual precipitation (mm)
+
+plant.climate.dat <- cbind.data.frame(plant.dat, Temperature = plant.temp.dat, Precipitation = plant.precip.dat)
 ```
 
-### 2.1 Hypothesis testing with linear mixed effects model
-This model tests whether the mycorrhizal fungi treatments (MYC), nutrient fertilization treatments (Nitrogen, Phosphorus), and/or their interactions affect total plant biomass. The experiment was created with randomized blocks (REP) which are included as random effects to account for any potential variation in the room where plants were growing that might have unintentionally altered their growth.
-
+### 2 Quantile Regressions with Temperature and Precipitation
+The following code models the 5th, 50th, and 95th quantile regressions for each trait-temperature and trait-precipitation relationship
 ```javascript
+# Split dataset into list by each plant trait type
+plant.climate.ls <- split(plant.climate.dat, f = plant.climate.dat$Trait_id)
 
+# Create for loop to generate quantile regressions for each trait-climate relationship
+temperature.quantregs <- list()
+temperature.qr.summary <- list()
+precipitation.quantregs <- list()
+precipitation.qr.summary <- list()
+
+for (i in seq_along(names(plant.climate.ls))){
+  temperature.quantregs[[i]] <- rq(Temperature ~ Trait_value, tau = c(0.05, 0.5, 0.95), data = plant.climate.ls[[i]])
+  precipitation.quantregs[[i]] <- rq(Precipitation ~ Trait_value, tau = c(0.05, 0.5, 0.95), data = plant.climate.ls[[i]])
+  
+  temperature.qr.summary[[i]] <- summary(temperature.quantregs[[i]], se="boot", bsmethod= "xy")
+  precipitation.qr.summary[[i]] <- summary(precipitation.quantregs[[i]], se="boot", bsmethod= "xy")
+}
+
+names(temperature.quantregs) <- names(precipitation.quantregs) <- names(plant.climate.ls)
+names(temperature.qr.summary) <- names(precipitation.qr.summary) <- names(plant.climate.ls)
+
+
+# Visualizing the quantile regression differences across traits and climate variables
+
+ggplot(plant.climate.dat, aes(x = Trait_value, y = Temperature)) +
+  geom_point(size=1, na.rm=TRUE) +
+  stat_quantile(geom="quantile", position="identity", quantiles=c(0.95), method="rq", color="red", size=0.7, formula = y ~ x) +
+  stat_quantile(geom="quantile", position="identity", quantiles=c(0.5), method="rq", color="grey45", size=0.7,formula = y ~ x) +
+  stat_quantile(geom="quantile", position="identity", quantiles=c(0.05), method="rq", color="blue", size=0.7, formula = y ~ x) +
+  facet_wrap(~Trait_id, scales = "free_x") +
+  labs(x="Trait value", y="Temperature (C)") +
+  theme_bw() +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+  theme(legend.position="none")
+
+ggplot(plant.climate.dat, aes(x = Trait_value, y = Precipitation)) +
+  geom_point(size=1, na.rm=TRUE) +
+  stat_quantile(geom="quantile", position="identity", quantiles=c(0.95), method="rq", color="red", size=0.7, formula = y ~ x) +
+  stat_quantile(geom="quantile", position="identity", quantiles=c(0.5), method="rq", color="grey45", size=0.7,formula = y ~ x) +
+  stat_quantile(geom="quantile", position="identity", quantiles=c(0.05), method="rq", color="blue", size=0.7, formula = y ~ x) +
+  facet_wrap(~Trait_id, scales = "free_x") +
+  labs(x="Trait value", y="Precipitation (mm)") +
+  theme_bw() +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+  theme(legend.position="none")
 ```
+<p align="center"><img src="images/traits_quantreg.png?" alt="drawing" width="900"/></p>
 
-One big take-away from these results is in the MYC x P interaction term, which shows that plant growth responses to phosphorus fertilization depend on the mycorrhizal treatments (evidence that supports one of the main hypotheses in this project).
 
-
-### 2.2 Partial regression plots
-We can explore these patterns further with partial regressions, which is one way to isolate single variable effects while accounting for the variation attributed to other variables using residuals.
+### 3
 
 ```javascript
-# Calculate residuals for Nitrogen and Phosphorus effects (isolate variation explained by Nitrogen vs. Phosphorus nutrient treatments)
-TotalBiomass.mod.N.resids <- lm(log(TotalBiomass) ~ log(Nitrogen), data = pinus.myc.dat)
-TotalBiomass.mod.P.resids <- lm(log(TotalBiomass) ~ log(Phosphorus), data = pinus.myc.dat)
-N.resids <- resid(TotalBiomass.mod.N.resids)  
-P.resids <- resid(TotalBiomass.mod.P.resids)
-pinus.myc.dat <- cbind.data.frame(pinus.myc.dat, N.resids, P.resids)
 
-# Plot partial regressions using residuals
-ggplot(aes(x=log(Nitrogen), y=P.resids), data = pinus.myc.dat) +
-  geom_point(position = position_jitterdodge(dodge.width = 0.3, jitter.width = 0.1), size = 1.5, aes(color = MYC), show.legend = T) +
-  geom_smooth(method = "loess", se=F, lwd=1, show.legend = F, aes(color = MYC), formula = 'y~x') +
-  scale_colour_viridis_d("Fungal treatment", direction = -1) +
-  xlab("Log Nitrogen (mg/kg soil)") +
-  ylab("Total Plant Biomass (residuals)") +
-  ylim(-1.5, 1.2) +
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
-
-ggplot(aes(x=log(Phosphorus), y=N.resids), data = pinus.myc.dat) +
-  geom_point(position = position_jitterdodge(dodge.width = 0.3, jitter.width = 0.1), size = 1.5, aes(color = MYC), show.legend = T) +
-  geom_smooth(method = "loess", se=F, lwd=1, show.legend = F, aes(color = MYC), formula = 'y~x') +
-  scale_colour_viridis_d("Fungal treatment", direction = -1) +
-  xlab("Log Phosphorus (mg/kg soil)") +
-  ylab("Total Plant Biomass (residuals)") +
-  ylim(-1.5, 1.2) +
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 ```
 <p align="center"><img src="images/growthplots.jpeg?" alt="drawing" width="700"/></p>
 
