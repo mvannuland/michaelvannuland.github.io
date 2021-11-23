@@ -16,10 +16,12 @@ Load the relevant R libraries, plant data, and climate data.
 ```javascript
 # Load libraries, trait data, and climate data
 
-# Quantile regression
+# Anlaysis
 library(quantreg)
+library("FactoMineR")
+library("factoextra")
 
-# Spatial analysis and mapping
+# Spatial tools and mapping
 library(maptools)
 library(gpclib)
 library(rgdal)
@@ -49,7 +51,7 @@ plant.precip.dat <- raster::extract(climate.stack[[4]], plant.dat[2:3]) # bio12 
 plant.climate.dat <- cbind.data.frame(plant.dat, Temperature = plant.temp.dat, Precipitation = plant.precip.dat)
 ```
 
-### 2 Quantile Regressions with Temperature and Precipitation
+### 2. Quantile Regressions with Temperature and Precipitation
 The following code models the 5th, 50th, and 95th quantile regressions for each trait-temperature and trait-precipitation relationship
 ```javascript
 # Split dataset into list by each plant trait type
@@ -100,9 +102,11 @@ ggplot(plant.climate.dat, aes(x = Trait_value, y = Precipitation)) +
 <p align="center"><img src="images/traits_quantreg.png?" alt="drawing" width="900"/></p>
 
 
-### 3
-
+### 3. Multivariate analysis of climate variables
+Plants respond to more than just temperature and precipitation. Here, I show an example of how to use Principle Component Analysis to summarize the complex climate environment (i.e., combining dimensionality from all 19 climate variables) and model the subsequent plant trait-climate relationships using the new multivariate climate axes.
 ```javascript
+
+
 
 ```
 <p align="center"><img src="images/growthplots.jpeg?" alt="drawing" width="700"/></p>
