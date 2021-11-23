@@ -1,61 +1,26 @@
 ## Project 1: Quantifying and mapping plant trait limits at climate extremes
+ 
+**Project description:** This project shows how to combine quantile regressions with plant trait data and climate variables to better understand species geographic ranges. Data are from Van Nuland et al. (2020) "Intraspecific trait variation across elevation predicts a widespread tree species' climate niche and range limits" in <em>Ecology and Evolution</em>.
+ 
+Briefly, this study leveraged the variation across thousands of plant trait measuresments (e.g., leaf area, tree diameter) to predict where climates may be too difficult for a tree species to grow and thrive. The ecological idea behind this project is relatively straightforward: if climate stress leaves a consistent signature on plant trait variation, then trait distributions should be informative for predicting the temperature and precipitation extremes that define species range limits. Here, using quantile regression is helpful because you might expect that a given trait-climate relationship could differ between the upper 95th percentile, median 50th percentile, and lower 5th percentile of the climate gradient. For example, leaf traits might respond differently to temperature extremes at the upper warm edge vs. the lower cold edge of the species climate range, and quantile regressions can be useful for teasing apart these differences. 
 
-**Project description:** This project shows how to combine quantile regressions with plant trait data and climate variables to better understand species geographic ranges. Data are from Van Nuland et al. (2020) "Intraspecific trait variation across elevation predicts a widespread tree species' climate niche and range limits" in <em>Ecology and Evolution</em>. 
-
-Briefly, this study leveraged the variation across thousands of plant trait measuresments (e.g., leaf area, tree diameter) to predict where climates may be too difficult for a tree species to grow and thrive. The ecological idea behind this project is relatively straightforward: if climate stress leaves a consistent signature on plant trait variation, then trait distributions should be informative for predicting the temperature and precipitation extremes that define species range limits. Here, using quantile regression is helpful because we might expect that a given trait-climate relationship could differ between the upper 95th percentile, median 50th percentile, and lower 5th percentile of the climate gradient. For example, leaf traits might respond differently to temperature at the upper warm edge vs. the lower cold edge of the species climate range, and quantile regressions can be useful for teasing this apart.
-
-
-See the full project and results from the paper here: https://doi.org/10.1016/j.funeco.2020.100960.
-
+Below is an overview of the approach I used to sample plant traits across elevation gradients (which act as natural climate gradients) to capture the necessary variation in trait-climate relationships in order to test this idea. See the full project and results from the paper here for more information: https://doi.org/10.1002/ece3.5969.
+<p align="center"><img src="images/TraitClimateOverview.png?" alt="drawing" width="500"/></p>
 
 
 ### 1. Getting started
-Load the relevant R libraries and project dataset.
+Load the relevant R libraries and project dataset. 
 
 ```javascript
-# Libraries for data wrangling and analysis 
-library(lme4)
-library(lmerTest)
-library(geometry)
-library(fields)
-library(reshape2)
 
-# Libraries for plotting
-library(ggplot2)
-library(ggpubr)
-library(manipulateWidget)
-library(plotly)
-library(viridis)
-library(webshot)
-theme_set(theme_bw())
-
-# Load dataset
-pinus.myc.dat <- readRDS(file="pinus.myc.rds")
-
-# Subset data by fungal treatments (for response surface analysis later)
-Control <- subset(pinus.myc.dat, pinus.myc.dat$MYC=="Control")
-Fungi1 <- subset(pinus.myc.dat, pinus.myc.dat$MYC=="Fungi1")
-Fungi2 <- subset(pinus.myc.dat, pinus.myc.dat$MYC=="Fungi2")
-Mixed <- subset(pinus.myc.dat, pinus.myc.dat$MYC=="Mixed (F1+F2)")
 ```
 
 ### 2.1 Hypothesis testing with linear mixed effects model
 This model tests whether the mycorrhizal fungi treatments (MYC), nutrient fertilization treatments (Nitrogen, Phosphorus), and/or their interactions affect total plant biomass. The experiment was created with randomized blocks (REP) which are included as random effects to account for any potential variation in the room where plants were growing that might have unintentionally altered their growth.
 
 ```javascript
-TotalBiomass.mod <- lmer(log(TotalBiomass) ~ MYC * log(Nitrogen) * log(Phosphorus) + (1|REP), data = na.exclude(pinus.myc.dat))
 
-anova(TotalBiomass.mod)
 ```
-| Factor      | F value    | p value    |
-| :---        |   :----:   |       ---: |
-| MYC         | 0.8        | 0.5        |
-| Nitrogen    | 448.5      | <0.001 *** |
-| Phosphorus  | 0.2        | 0.7        |
-| MYC x N     | 1.7        | 0.2        |
-| MYC x P     | 2.9        | 0.04   *   |
-| N x P       | 65.4       | <0.001 *** |
-| MYC x N x P | 0.9        | 0.5        |
 
 One big take-away from these results is in the MYC x P interaction term, which shows that plant growth responses to phosphorus fertilization depend on the mycorrhizal treatments (evidence that supports one of the main hypotheses in this project).
 
@@ -97,79 +62,9 @@ ggplot(aes(x=log(Phosphorus), y=N.resids), data = pinus.myc.dat) +
 Visualizing plant growth simultaneously across the two-dimensional axes of critical soil resources (nitrogen and phosphorus).
 
 ```javascript
-# Create & smooth 7x7 matrices of total biomass responses across N and P gradients
-Control.mat <- acast(Control, Nitrogen~Phosphorus, value.var = "TotalBiomass", mean, drop=TRUE)
-Fungi1.mat <- acast(Fungi1, Nitrogen~Phosphorus, value.var = "TotalBiomass", mean, drop=TRUE)
-Fungi2.mat <- acast(Fungi2, Nitrogen~Phosphorus, value.var = "TotalBiomass", mean, drop=TRUE)
-Mixed.mat <- acast(Mixed, Nitrogen~Phosphorus, value.var = "TotalBiomass", mean, drop=TRUE)
 
-# Smooths over missing matrix values
-Control.mat.smooth <- image.smooth(Control.mat, theta=1)
-Fungi1.mat.smooth <- image.smooth(Fungi1.mat, theta=1)
-Fungi2.mat.smooth <- image.smooth(Fungi2.mat, theta=1)
-Mixed.mat.smooth <- image.smooth(Mixed.mat, theta=1)
-
-# Set same Z-axes limits across plots for easier comparison
-axz <- list(range = c(180, 1180), title=list(text="Plant biomass")) 
-
-# Control
-Control.surface <-
-  plot_ly( z = ~Control.mat.smooth$z) %>% 
-  add_surface(opacity = 0.95) %>% 
-  hide_colorbar() %>%
-  layout(
-  title=list(text="Control", y = 0.90, font=list(color="black", size=20)),
-  scene=list(
-    aspectmode = 'cube',
-    xaxis=list(title="Phosphorus", autorange = "reversed"),
-    yaxis=list(title="Nitrogen", autorange = "reversed"), 
-    zaxis=axz))
-
-# Fungi1
-Fungi1.surface <- 
-  plot_ly( z = ~Fungi1.mat.smooth$z) %>% 
-  add_surface(opacity = 0.95) %>% 
-  hide_colorbar() %>%
-  layout(
-  title=list(text="Fungi 1", y = 0.90, font=list(color="black", size=20)),
-  scene=list(
-    aspectmode = 'cube',
-    xaxis=list(title="Phosphorus", autorange = "reversed"),
-    yaxis=list(title="Nitrogen", autorange = "reversed"), 
-    zaxis=axz))
-
-# Fungi2
-Fungi2.surface <- 
-  plot_ly( z = ~Fungi2.mat.smooth$z) %>% 
-  add_surface(opacity = 0.95) %>% 
-  hide_colorbar() %>%
-  layout(
-  title=list(text="Fungi 2", y = 0.90, font=list(color="black", size=20)),
-  scene=list(
-    aspectmode = 'cube',
-    xaxis=list(title="Phosphorus", autorange = "reversed"),
-    yaxis=list(title="Nitrogen", autorange = "reversed"), 
-    zaxis=axz))
-
-# Mixed (F1 + F2)
-Mixed.surface <-
-  plot_ly( z = ~Mixed.mat.smooth$z) %>% 
-  add_surface(opacity = 0.95) %>% 
-  hide_colorbar() %>%
-  layout(
-  title=list(text="Mixed (F1 + F2)", y = 0.90, font=list(color="black", size=20)),
-  scene=list(
-    aspectmode = 'cube',
-    xaxis=list(title="Phosphorus", autorange = "reversed"),
-    yaxis=list(title="Nitrogen", autorange = "reversed"), 
-    zaxis=axz))
-
-combineWidgets(Control.surface, Fungi1.surface, Fungi2.surface, Mixed.surface, ncol = 2, nrow=2)
 ```
 
 
 ### 4. Provide a basis for further data collection through surveys or experiments
 
-Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. 
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
