@@ -37,7 +37,7 @@ library(rgeos)
 library(ggplot2)
 library(RColorBrewer)
 
-# Load plant trait data 
+# Load plant trait data (found here: https://github.com/mvannuland/DataSci_portfolio_datasets)
 plant.dat <- read.csv(file="Plant_traits.csv")
 
 # Load 19 'Bioclim' variables of climate data from worldclim website (https://www.worldclim.org/data/worldclim21.html)
