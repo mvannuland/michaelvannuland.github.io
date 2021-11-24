@@ -2,14 +2,15 @@
 
 ### Projects to include
 
-[1] Fungal niche expansions (shows histograms, for loop code, and 3D surface plots)
+[1] Plant-fungal mismatch (environmental modeling, climate change responses, spatial analysis)
 
-[2] Plant phenology (raincloud plots and stats example - random effects etc)
+[2] Plant trait and climate range limits (quantile regressions, multivariate analysis, climate data, geographic models)
 
-[3] Plant trait and climate range limits (quantile regressions and maps)
+[3] Pinus myc project (partial linear regression, bootstrapping, 3D surface plots)
 
-[4] Plant-fungal mismatch analysis and maps... (export a portion of the data and sdm maps to show example)
+[4] B4Warmed microbial bioinformatics (dada2 processing, data wrangling, )
+
 
 ---
 
-Also need to include links to data sci resume, and clarify experience levels with R (10 years), statistics (13 years), python, etc...
+** Also need to include links to data sci resume, and clarify experience levels with R (10 years), statistics (13 years), python, etc...
