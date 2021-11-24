@@ -4,8 +4,8 @@
 
 ### Projects
 
-[Quantile regressions, climate variables, geographic modeling, & spatial analysis](/sample_page.md)
-<img src="images/Trait_range_fig2.jpeg?raw=true"/>
+[Quantile regressions, climate data, multivariate analysis, spatial tools & geographic modeling](/sample_page.md)
+<img src="images/Trait_range_fig2.png?raw=true"/>
 
 ---
 
