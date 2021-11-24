@@ -4,6 +4,13 @@
 
 ### Projects
 
+---
+
+[Environmental modeling, climate change responses, & spatial analysis](http://example.com/)
+<img src="images/dummy_thumbnail.jpg?raw=true"/>
+
+---
+
 [Quantile regressions, climate data, multivariate analysis, spatial tools & geographic modeling (Van Nuland et al. 2020 Ecology & Evolution)](/sample_page.md)
 <img src="images/Trait_range_fig2.png?raw=true"/>
 
@@ -14,7 +21,7 @@
 
 ---
 
-[Project 3 Title](http://example.com/)
+[Project 4 Title](http://example.com/)
 <img src="images/dummy_thumbnail.jpg?raw=true"/>
 
 ---
