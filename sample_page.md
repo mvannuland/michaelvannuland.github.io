@@ -256,4 +256,4 @@ plot(state.sub, add = TRUE, lwd=0.5, xaxt="n", yaxt="n")
 plot(LeafPhenology.stack.max, col=Phenology.pal, xaxt="n", yaxt="n", legend=F, main='Constraints on Leaf Phenology')
 plot(state.sub, add = TRUE, lwd=0.5, xaxt="n", yaxt="n")
 ```
-<p align="center"><img src="images/TraitMaps.png?" alt="drawing" width="800"/></p>
+<p align="center"><img src="images/TraitMaps.png?" alt="drawing" width="600"/></p>
