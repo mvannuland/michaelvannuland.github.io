@@ -6,7 +6,7 @@ Briefly, this study leveraged the natural variation across plant trait measuresm
 
 Below is an overview of the approach I used to sample plant traits across elevation gradients (which act as natural climate gradients) to capture the necessary variation in trait-climate relationships in order to test this idea. 
  
-See the full project and results from the paper here for more information: https://doi.org/10.1002/ece3.5969.
+See the full project and results from the paper here for more information: <a> https://doi.org/10.1002/ece3.5969. </a>
 <p align="center"><img src="images/TraitClimateOverview.png?" alt="drawing" width="600"/></p>
  
  
@@ -61,7 +61,7 @@ plant.climate.dat <- cbind.data.frame(plant.dat, Temperature = plant.temp.dat, P
 ```
 
 ### 2. Quantile Regressions with Temperature and Precipitation
-The following code models the 5th, 50th, and 95th quantile regressions for each trait-temperature and trait-precipitation relationship. In particular, the lower and upper quantiles show where the extent of plant trait variation predicts the species' climate range limits. Areas beyond the outermost regression lines indicate "No-go zones" where there are no plant trait values that allow the tree species to exist in those climate conditions.
+The following code models the 5th, 50th, and 95th quantile regressions for each trait-temperature and trait-precipitation relationship. In particular, the lower and upper quantiles show where the extent of plant trait variation predicts the species' climate range limits. White areas beyond the outermost regression lines indicate "No-go zones" where there are no plant trait-climate combinations that likely limit the tree species from persisting under those conditions.
 ```javascript
 # Split dataset into list by each plant trait type
 plant.climate.ls <- split(plant.climate.dat, f = plant.climate.dat$Trait_id)
@@ -227,7 +227,7 @@ LeafPhenology.precipitation.95 <- (Precipitation.layer - 576)/2.0
 TreeDBH.precipitation.05 <- (Precipitation.layer - 161.8)/4.3
 TreeDBH.precipitation.95 <- (Precipitation.layer - 776)/0.05
 
-# Stack trait-climate layers and clip values > 0
+# Stack trait-climate layers
 LeafArea.stack <- stack(LeafArea.temperature.05, LeafArea.temperature.95, LeafArea.precipitation.05, LeafArea.precipitation.95)
 LeafCN.stack <- stack(LeafCN.temperature.05, LeafCN.temperature.95, LeafCN.precipitation.05, LeafCN.precipitation.95)
 LeafPhenology.stack <- stack(LeafPhenology.temperature.05, LeafPhenology.temperature.95, LeafPhenology.precipitation.05, LeafPhenology.precipitation.95)
@@ -246,7 +246,7 @@ LeafPhenology.stack.max[LeafPhenology.stack.max < 0] <- NA
 TreeDBH.stack.max <- stackApply(TreeDBH.stack, indices = rep(1, nlayers(TreeDBH.stack)), fun = max)
 TreeDBH.stack.max[TreeDBH.stack.max < 0] <- NA
 
-# Plots of two leaf traits
+# Example plots of two leaf traits
 LeafArea.pal <- brewer.pal(9,"PuRd")
 Phenology.pal <- brewer.pal(9, "YlGnBu")
 
