@@ -10,7 +10,7 @@
 ---
 
 [Mixed effects models, partial linear regression, bootstrapping, & Plot.ly 3D-surface plots (Van Nuland & Peay 2020 Fungal Ecology)](https://mvannuland.github.io/pinus_myc_page/)
-<img src="images/Pinus_myc.jpeg?raw=true"/>
+<img src="images/PinucMyc_coverfig.png?raw=true"/>
 
 ---
 
