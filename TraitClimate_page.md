@@ -6,7 +6,7 @@ Briefly, this study leveraged the natural variation across plant trait measuresm
 
 Below is an overview of the approach I used to sample plant traits across elevation gradients (which act as natural climate gradients) to capture the necessary variation in trait-climate relationships in order to test this idea. 
  
-See the full project and results from the paper here for more information: <a> https://doi.org/10.1002/ece3.5969. </a>
+See the full project and results from the paper here for more information: <a href="https://doi.org/10.1002/ece3.5969">https://doi.org/10.1002/ece3.5969.</a>
 <p align="center"><img src="images/TraitClimateOverview.png?" alt="drawing" width="600"/></p>
  
  
