@@ -32,7 +32,10 @@ library(plyr)
 library(plotrix)
 library(ggsn)
 library(rgeos)
+
+# Plotting
 library(ggplot2)
+library(RColorBrewer)
 
 # Load plant trait data 
 plant.dat <- read.csv(file="Plant_traits.csv")
@@ -184,8 +187,73 @@ ggplot(plant.climate.pca.dat, aes(x = Trait_value, y = PCA2)) +
 ### 4. Mapping climate constraints on plant trait variation
 In sections 2 and 3 I showed how variation in plant traits can predict the climatic limits a species can tolerate. Now, we can reverse this by applying the quantial regression equations to spatial layers of climate data. This approach generates maps that show how the extent of plant trait variation differs across the landscape. Specifically, the color gradients shows changes in projected trait diversity - darker areas are climates that can contain a broad range of plant trait values (high functional diversity), whereas lighter areas are climates that can only support a limited range of trait values (low functional diversity).
 ```javascript
+# Download and crop US data to set map extent to western US states
+US1 <- getData('GADM', country='USA', level=1)
+CONUS <- c("Arizona", "California", "Colorado","Idaho","Montana","Nevada","New Mexico","Oregon","Utah","Washington","Wyoming")
+state.sub <- US1[as.character(US1@data$NAME_1) %in% CONUS, ]
 
+Climate.stack.clip  <- crop(climate.stack, extent(state.sub))
+Climate.stack.clip.mask <- mask(Climate.stack.clip, state.sub)
 
+# Pull out temperature and precipitation layers
+Temperature.layer <- Climate.stack.clip.mask$bio1
+Precipitation.layer <- Climate.stack.clip.mask$bio12
 
+# Limit gridded climate data within range of sampled data (min/max values)
+Temperature.layer[Temperature.layer <= min(plant.climate.pca.dat$Temperature)] <- NA
+Temperature.layer[Temperature.layer >= max(plant.climate.pca.dat$Temperature)] <- NA
+Precipitation.layer[Precipitation.layer <= min(plant.climate.pca.dat$Precipitation)] <- NA
+Precipitation.layer[Precipitation.layer >= max(plant.climate.pca.dat$Precipitation)] <- NA
+
+#   Solve for the trait values predicted by climate data using the trait-climate quantile regression coefficients
+#   y = B0 + B1*x    =     Climate = B0 + B1*Trait     =     Trait = (Climate - B0)/B1
+# See summary objects created in the quantile regression step for coefficient values used here
+
+LeafArea.temperature.05 <- (Temperature.layer - (-1.9))/0.37
+LeafArea.temperature.95 <- (Temperature.layer - 1.3)/1.14
+LeafCN.temperature.05 <- (Temperature.layer - (-8.57))/0.55
+LeafCN.temperature.95 <- (Temperature.layer - 1.03)/0.42
+LeafPhenology.temperature.05 <- (Temperature.layer - 9.9)/-0.10
+LeafPhenology.temperature.95 <- (Temperature.layer - 28.7)/-0.18
+TreeDBH.temperature.05 <- (Temperature.layer - (-0.38))/0.02
+TreeDBH.temperature.95 <- (Temperature.layer - 13.9)/-0.14
+
+LeafArea.precipitation.05 <- (Precipitation.layer - 439.5)/-27.1
+LeafArea.precipitation.95 <- (Precipitation.layer - 961)/-36.5
+LeafCN.precipitation.05 <- (Precipitation.layer - 700)/-17.9
+LeafCN.precipitation.95 <- (Precipitation.layer - 1139)/-27.0
+LeafPhenology.precipitation.05 <- (Precipitation.layer - 1130)/-8.8
+LeafPhenology.precipitation.95 <- (Precipitation.layer - 576)/2.0
+TreeDBH.precipitation.05 <- (Precipitation.layer - 161.8)/4.3
+TreeDBH.precipitation.95 <- (Precipitation.layer - 776)/0.05
+
+# Stack trait-climate layers and clip values > 0
+LeafArea.stack <- stack(LeafArea.temperature.05, LeafArea.temperature.95, LeafArea.precipitation.05, LeafArea.precipitation.95)
+LeafCN.stack <- stack(LeafCN.temperature.05, LeafCN.temperature.95, LeafCN.precipitation.05, LeafCN.precipitation.95)
+LeafPhenology.stack <- stack(LeafPhenology.temperature.05, LeafPhenology.temperature.95, LeafPhenology.precipitation.05, LeafPhenology.precipitation.95)
+TreeDBH.stack <- stack(TreeDBH.temperature.05, TreeDBH.temperature.95, TreeDBH.precipitation.05, TreeDBH.precipitation.95)
+
+# Identify and select the max predicted trait value per grid (to visualize the strongest climate constraints on plant traits)
+LeafArea.stack.max <- stackApply(LeafArea.stack, indices = rep(1, nlayers(LeafArea.stack)), fun = max)
+LeafArea.stack.max[LeafArea.stack.max < 0] <- NA
+
+LeafCN.stack.max <- stackApply(LeafCN.stack, indices = rep(1, nlayers(LeafCN.stack)), fun = max)
+LeafCN.stack.max[LeafCN.stack.max < 0] <- NA
+
+LeafPhenology.stack.max <- stackApply(LeafPhenology.stack, indices = rep(1, nlayers(LeafPhenology.stack)), fun = max)
+LeafPhenology.stack.max[LeafPhenology.stack.max < 0] <- NA
+
+TreeDBH.stack.max <- stackApply(TreeDBH.stack, indices = rep(1, nlayers(TreeDBH.stack)), fun = max)
+TreeDBH.stack.max[TreeDBH.stack.max < 0] <- NA
+
+# Plots of two leaf traits
+LeafArea.pal <- brewer.pal(9,"PuRd")
+Phenology.pal <- brewer.pal(9, "YlGnBu")
+
+plot(LeafArea.stack.max, col=LeafArea.pal, xaxt="n", yaxt="n", legend=F, main='Constraints on Leaf Area')
+plot(state.sub, add = TRUE, lwd=0.5, xaxt="n", yaxt="n")
+
+plot(LeafPhenology.stack.max, col=Phenology.pal, xaxt="n", yaxt="n", legend=F, main='Constraints on Leaf Phenology')
+plot(state.sub, add = TRUE, lwd=0.5, xaxt="n", yaxt="n")
 ```
-
+<p align="center"><img src="images/TraitMaps.png?" alt="drawing" width="800"/></p>
