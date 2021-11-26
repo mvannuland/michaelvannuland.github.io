@@ -6,7 +6,7 @@
 
 ---
 
-[Environmental modeling, climate change projections, & spatial analysis](http://example.com/)
+[Environmental modeling, climate change forecasts, & spatial analysis](http://example.com/)
 <img src="images/TreeFungal_overlap.png?raw=true"/>
 
 ---
