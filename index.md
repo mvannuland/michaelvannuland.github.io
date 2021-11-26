@@ -24,7 +24,7 @@
 
 ---
 
-[Microbial bioinformatics, multivariate analysis, spatial projections of species turnover](http://example.com/)
+[Microbial bioinformatics, multivariate analysis, & mapping ecological patterns](http://example.com/)
 
 <img src="images/dummy_thumbnail.jpg?raw=true"/>
 
