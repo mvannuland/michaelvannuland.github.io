@@ -6,8 +6,8 @@
 
 ---
 
-[Environmental modeling, climate change responses, & spatial analysis](http://example.com/)
-<img src="images/dummy_thumbnail.jpg?raw=true"/>
+[Environmental modeling, climate change projections, & spatial analysis](http://example.com/)
+<img src="images/TreeFungal_overlap.png?raw=true"/>
 
 ---
 
