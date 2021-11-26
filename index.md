@@ -12,7 +12,7 @@
 
 ---
 
-#### 2 -- [Quantile regressions, climate data, multivariate analysis, spatial tools & geographic modeling (Van Nuland et al. 2020 Ecology & Evolution)](/TraitClimate_page.md)
+#### 2 -- [Quantile regressions, multivariate analysis, spatial tools & geographic modeling (Van Nuland et al. 2020 Ecology & Evolution)](/TraitClimate_page.md)
 
 <img src="images/Trait_range_fig2.png?raw=true"/>
 
