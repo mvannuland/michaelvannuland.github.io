@@ -8,7 +8,7 @@
 
 #### 1 -- [Environmental modeling, climate change forecasts, & spatial analysis](http://example.com/)
 
-<img src="images/TreeFungal_overlap.png?raw=true"/>
+<img src="images/TreeFungal_overlap.cover.png?raw=true"/>
 
 ---
 
