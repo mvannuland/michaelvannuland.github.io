@@ -12,7 +12,7 @@
 
 ---
 
-#### Project 2 -- [Predicting species climate range limits](/TraitClimate_page.md)
+#### Project 2 -- [Predicting species climate range limits](https://mvannuland.github.io/ClimateRangeLimits_page/)
 <em>Quantile regressions, multivariate analysis, spatial tools & geographic modeling (Van Nuland et al. 2020 Ecology & Evolution)</em>
 <img src="images/Trait_range_fig2.png?raw=true"/>
 
