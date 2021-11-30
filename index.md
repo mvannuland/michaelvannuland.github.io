@@ -19,7 +19,7 @@
 ---
 
 #### Project 3 -- [Quantifying fungal benefits to plant hosts under stress](https://mvannuland.github.io/pinus_myc_page/)
-<em>Mixed effects models, partial linear regression, permutation and bootstrapping, & Plot.ly 3D-surface plots (Van Nuland & Peay 2020 Fungal Ecology)</em>
+<em>Mixed effects models, partial linear regression, matrix bootstrapping, & Plot.ly 3D-surface plots (Van Nuland & Peay 2020 Fungal Ecology)</em>
 <img src="images/PinucMyc_coverfig.png?raw=true"/>
 
 ---
