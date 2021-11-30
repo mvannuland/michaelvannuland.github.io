@@ -6,7 +6,7 @@
 
 ---
 
-#### Project 1 -- [Measuring spatial changes in tree-fungal partnerships](http://example.com/)
+#### Project 1 -- [Measuring spatial changes in tree-fungal partnerships](TreeFungalMismatch_page.md)
 <em>Environmental modeling, climate change forecasts, spatial analysis & data visualization</em>
 <img src="images/TreeFungal_overlap.cover.png?raw=true"/>
 
