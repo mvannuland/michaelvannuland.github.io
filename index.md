@@ -7,7 +7,7 @@
 ---
 
 #### Project 1 -- [Geographic changes in tree-fungal partnerships](https://mvannuland.github.io/TreeFungalParnerships_page/)
-<em>Species distribution modeling, climate change forecasts, data harmonization, spatial analysis, & data visualization</em>
+<em>Species distribution modeling, climate change forecasts, data harmonization, spatial analysis, & visualization</em>
 <img src="images/TreeFungal_overlap.cover.png?raw=true"/>
 
 ---
