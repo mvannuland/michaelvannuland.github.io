@@ -24,6 +24,6 @@
 
 ---
 
-### [Data Visualizations](https://mvannuland.github.io/DS_Project_1/)
+### [Data Visualizations](/DataVisualization_page.md)
 
 ---
