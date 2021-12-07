@@ -2,7 +2,7 @@
 
 ---
 
-### Example Projects
+### Projects
 
 ---
 
@@ -24,6 +24,11 @@
 
 ---
 
-### Data Visualizations [Characterizing microbial biodiversity](/DataVisualization_page.md)
+### Visualizations 
+
+---
+
+#### [Patterns of microbial biodiversity](/DataVisualization_page.md)
 <img src="images/datavizcover.png?raw=true"/>
+
 ---
