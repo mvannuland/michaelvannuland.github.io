@@ -24,6 +24,6 @@
 
 ---
 
-### [Data Visualizations](/DataVisualization_page.md)
-
+### Data Visualizations [Characterizing microbial biodiversity](/DataVisualization_page.md)
+<img src="images/datavizcover.png?raw=true"/>
 ---
