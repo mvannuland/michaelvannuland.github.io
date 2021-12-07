@@ -1,5 +1,4 @@
-## Visualizations
-**Michael Van Nuland**
+# Visualizations
 
 ### 1 -- Mapping host-associated fungal communities
 <p align="center"><img src="images/Dataviz2.png?" alt="drawing" width="1000"/></p>
