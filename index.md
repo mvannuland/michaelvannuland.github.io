@@ -1,8 +1,17 @@
-## Data Science Portfolio
+## Portfolio
 
 ---
 
-### Projects
+### Data Insights & Visualizations 
+
+---
+
+#### [Patterns of microbial biodiversity](/DataVisualization_page.md)
+<img src="images/datavizcover.png?raw=true"/>
+
+---
+
+### Example Projects
 
 ---
 
@@ -21,14 +30,5 @@
 #### Project 3 -- [Measuring fungal benefits to plant hosts under stress](https://mvannuland.github.io/DS_Project_3/)
 <em>Mixed effects models, partial linear regression, matrix bootstrapping, & Plot.ly 3D-surface plots (Van Nuland & Peay 2020 Fungal Ecology)</em>
 <img src="images/PinucMyc_coverfig.png?raw=true"/>
-
----
-
-### Visualizations 
-
----
-
-#### [Patterns of microbial biodiversity](/DataVisualization_page.md)
-<img src="images/datavizcover.png?raw=true"/>
 
 ---
